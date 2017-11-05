@@ -1,0 +1,169 @@
+<html>
+<head>
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    body > * {
+      width: 100vw;
+      height: 50%;
+    }
+    main {
+      overflow: hidden;
+    }
+    #svg {
+        width: 50%;
+    }
+    aside {
+      background: red;
+      width: 50%;
+      height: 100%;
+      float: right;
+    }
+    footer {
+      background: #ff8f8f;
+    }
+    </style>
+    <script>
+        function changeTankHeight(tankId, percent) {
+            let initial = tankId == 'tank1' ? 240 : 500
+            let rect = document.getElementById(tankId)
+
+            let height = 180 * percent
+            let y = initial + (180 - height)
+
+            rect.setAttribute("height", height)
+            rect.setAttribute("y", y)
+        }
+
+        function toggleValve() {}
+
+        function poll() {
+            let json = requestData()
+            json.forEach((asset, value) => {
+                let type = asset.split('-')[1]
+                switch (type) {
+                    case 'ULS':
+                        changeTankHeight(asset, value)
+                        // write litres to info pane
+                        break
+                    case 'VLV':
+                        toggleValve(asset)
+                        // write to info
+                        break
+                    case 'P':
+
+                        break
+                    case 'FM':
+
+                        break
+                    case 'TNK':
+
+                        break
+                }
+            })
+        }
+
+        function requestData() {
+            var xhr = new XMLHttpRequest()
+            var result
+            xhr.overrideMimeType('application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readystate !== 4 || xhr.status !== 200)
+                    return
+                // contains an array of objects
+                result = JSON.parse(xhr.responseText)
+            }
+            xhr.open('GET', 'thing:8080/poll') // true for async? will this block UI thread?
+            xhr.send()
+
+            return result
+        }
+        
+        function updateInfo(id) {
+            let text = ""
+            let type = id.split('-')[1]
+                switch (type) {
+                    case 'ULS':
+                        text = "<p>Ultrasonic Level Sensor</p><p>The ultrasonic level sensor monitors the level of wastewater in the tank it is attached to.</p>"
+                        break
+                    case 'VLV':
+                        text = "<p>Valve</p><p>A Motor operated valve can only be operated (opened or closed) remotely</p>"
+                        break
+                    case 'P':
+                        text = "<p>Pump</p><p>A pump can only be activated remotely. It can set to the following values, and corresponding states</p>"
+                        break
+                    case 'FM':
+                        text = "<p>Flow meter</p><p>Measures speed of flow</p>"
+                        break
+                    case 'TNK':
+                        text = "<p>Tank</p><p>Holds sewage</p>"
+                        break
+                }
+            document.getElementsByTagName('aside')[0].innerHTML = "<h1>" + id + "</h1>" + text
+        }
+        
+        
+    </script>
+</head>
+<body>
+    <main>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 1360" id="svg">
+            <!-- ULS' -->
+            <path onclick="updateInfo(this.id)" id="WWTP-ULS-001" d="M320 195c0-8.28-10.07-15-22.5-15s-22.5 6.72-22.5 15c0 8.28 10.07 15 22.5 15s22.5-6.72 22.5-15zm-22.5 15v30M275 195h45" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-ULS-002" d="M980 455c0-8.28-8.95-15-20-15s-20 6.72-20 15c0 8.28 8.95 15 20 15s20-6.72 20-15zm-20 15v30M940 455h40" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            
+            <!-- FMs -->
+            <path onclick="updateInfo(this.id)" id="WWTP-FM-001" d="M120 235c0-8.28 8.95-15 20-15s20 6.72 20 15zm20 0v30" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-FM-002" d="M650 460c0-11.05 8.95-20 20-20s20 8.95 20 20zm20 0v40" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-FM-003" d="M690 645c0 11.05-8.95 20-20 20s-20-8.95-20-20zm-20 0v-40" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-FM-004" d="M1159 605c0-8.28 8.95-15 20-15s20 6.72 20 15zm20 0v30" stroke="#000" stroke-width="2" fill="#f5b5c8"/>
+            
+            <!-- VLVs -->
+            <path onclick="updateInfo(this.id)" id="WWTP-VLV-001" d="M184.5 251.25v22.5l17-11.25zm17 11.25h2zm2 0l17-11.25v22.5zM202.5 251.25v22.5" stroke="#000" fill="#fff"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-VLV-002" d="M364.5 486.25v22.5l17-11.25zm17 11.25h2zm2 0l17-11.25v22.5zM382.5 486.25v22.5" stroke="#000" fill="#fff"/>
+            <path id="WWTP-VLV-003" d="M364.5 591.25v22.5l17-11.25zm17 11.25h2zm2 0l17-11.25v22.5zM382.5 591.25v22.5" stroke="#000" fill="#fff"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-VLV-004" d="M785 497.5v25l19-12.5zm19 12.5h2zm2 0l19-12.5v25zM805 497.5v25" stroke="#000" fill="#fff"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-VLV-005" d="M785 602.5v25l19-12.5zm19 12.5h2zm2 0l19-12.5v25zM805 602.5v25" stroke="#000" fill="#fff"/>
+            <path onclick="updateInfo(this.id)" id="WWTP-VLV-006" d="M1154.5 648.75v-22.5l-17 11.25zm-17-11.25h-2zm-2 0l-17 11.25v-22.5zM1136.5 648.75v-22.5" stroke="#000" fill="#fff"/>
+            
+            <path d="M260 240h160v180H260zM500.64 522.4l-9.52 12.6 56.42-.36-11.97-14.52-.7.18" stroke="#000" stroke-width="2" fill="#fff"/>
+            
+            <path d="M492.1 489.64s1.6-2.46 2.3-3.42c.78-.96.85-1.5 2.8-3.36 2.04-1.8 3.86-3.24 6.45-4.44 2.66-1.26 4.13-2.46 8.4-2.88 4.27-.48 5.53-.54 5.53-.54l42.42.12-.07 22.74-15.75-.06s.28 2.1.28 3.36c0 1.32.14 2.64-.35 4.62-.4 1.98-.83 3.72-2.1 6.12-1.25 2.4-2.44 4.2-3.35 5.22-.9 1.08-1.54 1.8-3.43 3.36-1.9 1.62-3 2.4-5.18 3.42-2.17 1.08-3.43 1.74-4.97 2.1-1.6.42-2.1.72-4.62.96-2.52.18-4.13.3-5.8.18-1.7-.18-3.58-.36-5.05-.84-1.54-.48-4.06-1.44-5.46-2.16-1.47-.72-1.6-.48-3.57-1.92-1.96-1.44-2.45-1.32-4.13-3.36-1.75-1.98-3.36-3.84-4.34-6.12-.98-2.28-2.1-5.58-2.1-5.58" stroke="#000" stroke-width="2" fill="#fff"/>
+            
+            <path d="M507.78 494.8s.7-.96 1.33-1.5c.7-.54 1.48-1.08 2.4-1.56.9-.48 1.67-.84 2.8-1.08 1.18-.3 3.14-.36 3.14-.36s2.17.12 3.36.66c1.26.48 2.87 1.2 3.92 2.28 1.05 1.14 1.4 1.56 1.9 2.4.55.9.9 1.38 1.25 2.52.28 1.14.5 2.16.5 2.76 0 .66.06 1.08-.08 1.98-.22.96-.08 1.14-.5 2.1-.35.96-.28 1.08-.98 2.1-.63 1.02-.7 1.26-1.4 1.98-.77.78-.98 1.08-1.82 1.62-.9.54-1.12.78-2.38 1.2-1.26.48-1.47.6-2.45.72-.9.12-1.33.12-2.17.12-.9-.06-1.12 0-2.1-.24-.9-.24-2.03-.6-2.03-.6s-.7-.3-1.4-.72-.77-.36-1.6-1.14c-.85-.84-1.2-.9-1.9-2.04l-.63-1.14" stroke="#000" stroke-width="2" fill="#fff"/>            
+            
+            <path d="M560 487h110v23h110" stroke="#000" stroke-width="2" fill="none"/><path d="M560 488h-.04v-2h.04zM783 511h-3v-2h3z"/><path d="M500.64 627.4l-9.52 12.6 56.42-.36-11.97-14.52-.7.18" stroke="#000" stroke-width="2" fill="#fff"/><path d="M492.1 594.64s1.6-2.46 2.3-3.42c.78-.96.85-1.5 2.8-3.36 2.04-1.8 3.86-3.24 6.45-4.44 2.66-1.26 4.13-2.46 8.4-2.88 4.27-.48 5.53-.54 5.53-.54l42.42.12-.07 22.74-15.75-.06s.28 2.1.28 3.36c0 1.32.14 2.64-.35 4.62-.4 1.98-.83 3.72-2.1 6.12-1.25 2.4-2.44 4.2-3.35 5.22-.9 1.08-1.54 1.8-3.43 3.36-1.9 1.62-3 2.4-5.18 3.42-2.17 1.08-3.43 1.74-4.97 2.1-1.6.42-2.1.72-4.62.96-2.52.18-4.13.3-5.8.18-1.7-.18-3.58-.36-5.05-.84-1.54-.48-4.06-1.44-5.46-2.16-1.47-.72-1.6-.48-3.57-1.92-1.96-1.44-2.45-1.32-4.13-3.36-1.75-1.98-3.36-3.84-4.34-6.12-.98-2.28-2.1-5.58-2.1-5.58" stroke="#000" stroke-width="2" fill="#fff"/><path d="M507.78 599.8s.7-.96 1.33-1.5c.7-.54 1.48-1.08 2.4-1.56.9-.48 1.67-.84 2.8-1.08 1.18-.3 3.14-.36 3.14-.36s2.17.12 3.36.66c1.26.48 2.87 1.2 3.92 2.28 1.05 1.14 1.4 1.56 1.9 2.4.55.9.9 1.38 1.25 2.52.28 1.14.5 2.16.5 2.76 0 .66.06 1.08-.08 1.98-.22.96-.08 1.14-.5 2.1-.35.96-.28 1.08-.98 2.1-.63 1.02-.7 1.26-1.4 1.98-.77.78-.98 1.08-1.82 1.62-.9.54-1.12.78-2.38 1.2-1.26.48-1.47.6-2.45.72-.9.12-1.33.12-2.17.12-.9-.06-1.12 0-2.1-.24-.9-.24-2.03-.6-2.03-.6s-.7-.3-1.4-.72-.77-.36-1.6-1.14c-.85-.84-1.2-.9-1.9-2.04l-.63-1.14" stroke="#000" stroke-width="2" fill="#fff"/>
+            
+            <path d="M560 592h110v23h110" stroke="#000" stroke-width="2" fill="none"/><path d="M560 593h-.04v-2h.04zM783 616h-3v-2h3z"/><path d="M400.5 497.5H490" stroke="#000" stroke-width="2" fill="none"/><path d="M491.04 498.5H490v-2h1.28z"/><path d="M400.5 602.5H490" stroke="#000" stroke-width="2" fill="none"/><path d="M491.04 603.5H490v-2h1.28z"/><path d="M340 415v45-40" stroke="#000" stroke-width="2" fill="none"/><path d="M341 420h-2 2z"/><path d="M364.5 497.5H340V415" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M920 500h160v180H920z" stroke="#000" stroke-width="2" fill="#fff"/>
+            <path d="M340 415v45-40" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M341 420h-2 2z"/>
+            <path d="M364.5 602.5H340V420" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M830 615h30V510h-30" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M830 616h-3v-2h3zM830 511h-3v-2h3z"/>
+            <path d="M919 558h-59" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M920 559h-1v-2h1z"/><path d="M220.5 262.5H259" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M260 263.5h-1v-2h1z"/>
+            <path d="M184.5 262.5H60" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M60 262.5l14.27-4.64v9.28z" stroke="#000" stroke-width="2"/>
+            <path d="M1118.5 637.5h-19.25V630H1080" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M1154.5 637.5h84.5" stroke="#000" stroke-width="2" fill="none"/>
+            <path d="M1239 637.5l-14.27 4.64v-9.28z" stroke="#000" stroke-width="2"/>
+            <rect onclick="updateInfo(this.id)" id="WWTP-TNK-001" x="260" y="320" width="160" height="100" stroke="#000" stroke-width="2" fill="#99d2f2"/>
+            <rect onclick="updateInfo(this.id)" id="WWTP-TNK-002" x="920" y="580" width="160" height="100" stroke="#000" stroke-width="2" fill="#99d2f2"/>
+        </svg>
+        <aside>
+        </aside>
+    </main>
+    <footer>
+        <h1>Hello</h1>
+    </footer>
+</body>
+</html>
