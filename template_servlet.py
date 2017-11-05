@@ -32,7 +32,7 @@ def do_math():
             lift_station["WWTP-VLV-001"] = False
             return "failure"
     print('after 1')
-    if((float(lift_station["WWTP-ULS-001"]) > 0) and float((lift_station["WWTP-ULS-001"]) < 0.95)):
+    if((float(lift_station["WWTP-ULS-001"]) > 0)):
         if(lift_station["WWTP-VLV-002"] and lift_station["WWTP-VLV-004"]):
             lift_station["WWTP-ULS-002"] = lift_station["WWTP-ULS-002"] + lift_station["WWTP-FM-002"]*20/14000
             lift_station["WWTP-ULS-001"] = lift_station["WWTP-ULS-001"] - lift_station["WWTP-FM-002"]*20/14000
