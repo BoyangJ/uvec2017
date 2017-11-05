@@ -21,13 +21,49 @@
         width: 50%;
     }
     aside {
-      background: red;
       width: 50%;
       height: 100%;
       float: right;
+      padding: 20px;
+      border: 1px solid;
     }
+    aside h1 {
+      margin-bottom: 10px;
+    } 
     footer {
       background: #ff8f8f;
+    }
+    table#logs {
+      display: block;
+      border: none;
+      table-layout: unset;
+      border-spacing: 0;
+      overflow-x: auto;
+      font-size: 90%;
+      margin-bottom: 40px;
+    }
+    #logs th, #logs tr {
+      background: #f8f8f8;
+      color: #333;
+    }
+    #logs tr:nth-child(odd) {
+      background: #fff;
+    }
+    #logs tr:hover {
+      background: #dde5fc;
+    }
+    #logs td, #logs th {
+      border-bottom: 1px solid #d6d6d6;
+      padding: 8px 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: left;
+    }
+    #logs th {
+      padding-top: 20px;
+    }
+    #logs td:last-child {
+      width: 100%;
     }
     </style>
     <script>
@@ -70,22 +106,6 @@
             })
         }
 
-        function requestData() {
-            var xhr = new XMLHttpRequest()
-            var result
-            xhr.overrideMimeType('application/json');
-            xhr.onreadystatechange = function() {
-                if (xhr.readystate !== 4 || xhr.status !== 200)
-                    return
-                // contains an array of objects
-                result = JSON.parse(xhr.responseText)
-            }
-            xhr.open('GET', 'thing:8080/poll') // true for async? will this block UI thread?
-            xhr.send()
-
-            return result
-        }
-        
         function updateInfo(id) {
             let text = ""
             let type = id.split('-')[1]
@@ -108,8 +128,6 @@
                 }
             document.getElementsByTagName('aside')[0].innerHTML = "<h1>" + id + "</h1>" + text
         }
-        
-        
     </script>
 </head>
 <body>
@@ -160,10 +178,27 @@
             <rect onclick="updateInfo(this.id)" id="WWTP-TNK-002" x="920" y="580" width="160" height="100" stroke="#000" stroke-width="2" fill="#99d2f2"/>
         </svg>
         <aside>
+            <h2>Click an element to view information</p>
         </aside>
     </main>
     <footer>
-        <h1>Hello</h1>
+        <table id="logs">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hi</td>
+                    <td>Hi</td>
+                </tr>
+                <tr>
+                    <td>Hi</td>
+                    <td>Hi</td>
+                </tr>
+            </tbody>
     </footer>
 </body>
 </html>
