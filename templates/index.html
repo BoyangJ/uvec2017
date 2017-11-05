@@ -8,47 +8,29 @@
   <div class="mainpage">
 
     <ul>
-      <li>Valve 001:
-        {% if lift_station["WWTP-VLV-001"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-001'); return false">Valve 001:</button>
+        {% if lift_station["WWTP-VLV-001"] %}Open{% else %}Closed{% endif %}
       </li>
-      <li>Valve 002:
-        {% if lift_station["WWTP-VLV-002"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-002'); return false">Valve 002:</button>
+        {% if lift_station["WWTP-VLV-002"] %}Open{% else %}Closed{% endif %}
       </li>
-      <li>Valve 003:
-        {% if lift_station["WWTP-VLV-003"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-003'); return false">Valve 003:</button>
+        {% if lift_station["WWTP-VLV-003"] %}Open{% else %}Closed{% endif %}
       </li>
-      <li>Valve 004:
-        {% if lift_station["WWTP-VLV-004"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-004'); return false">Valve 004:</button>
+        {% if lift_station["WWTP-VLV-004"] %}Open{% else %}Closed{% endif %}
       </li>
-      <li>Valve 005:
-        {% if lift_station["WWTP-VLV-005"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-005'); return false">Valve 005:</button>
+        {% if lift_station["WWTP-VLV-005"] %}Open{% else %}Closed{% endif %}
       </li>
-      <li>Valve 006:
-        {% if lift_station["WWTP-VLV-006"] %}
-        Open
-        {% else %}
-        Closed
-        {% endif %}
+      <li><button onclick="toggle_valve('WWTP-VLV-006'); return false">Valve 006:</button>
+        {% if lift_station["WWTP-VLV-006"] %}Open{% else %}Closed{% endif %}
+      </li>
+      <li><button onclick="update_pump('WWTP-P-001'); return false">Pump 001:</button>
+        {{lift_station["WWTP-P-001"]}}
+      </li>
+      <li><button onclick="update_pump('WWTP-P-002'); return false">Pump 001:</button>
+        {{lift_station["WWTP-P-002"]}}
       </li>
     </ul>
 
@@ -61,7 +43,7 @@
 <script type="text/javascript">
 function poll(){
   $.ajax({
-    url:'/poll',
+    url:'/poll_new',
     type:'GET',
     success:function(){
       //put updates for elements here
@@ -69,4 +51,39 @@ function poll(){
   });
   return false;
 }
+
+function toggle_valve(valve){
+  $.ajax({
+    url:'/update_valve',
+    type:'POST',
+    data: {"valve":  valve},
+    success:function(){
+
+      //put updates for elements here
+    }
+  });
+  return false;
+}
+
+function update_pump(pump, value){
+  $.ajax({
+    url:'/update_pump',
+    type:'POST',
+    data: {"pump": pump,"value":  value},
+    success:function(){
+
+      //put updates for elements here
+    }
+  });
+  return false;
+}
+function doPoll(){
+    $.get('do_math', function(data) {
+        console.log(data);  // process results here
+        setTimeout(doPoll,1000);
+    });
+}
+$(function(){
+  doPoll();
+})
 </script>
