@@ -6,9 +6,67 @@
 
 <body>
   <div class="mainpage">
-    <h1>
-      testing webpage - {{ pagetype }}
-    </h1>
 
+    <ul>
+      <li>Valve 001:
+        {% if lift_station["WWTP-VLV-001"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+      <li>Valve 002:
+        {% if lift_station["WWTP-VLV-002"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+      <li>Valve 003:
+        {% if lift_station["WWTP-VLV-003"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+      <li>Valve 004:
+        {% if lift_station["WWTP-VLV-004"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+      <li>Valve 005:
+        {% if lift_station["WWTP-VLV-005"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+      <li>Valve 006:
+        {% if lift_station["WWTP-VLV-006"] %}
+        Open
+        {% else %}
+        Closed
+        {% endif %}
+      </li>
+    </ul>
+
+    <button onclick="poll(); return false;">poll</button>
   </div>
 </body>
+
+
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript">
+function poll(){
+  $.ajax({
+    url:'/poll',
+    type:'GET',
+    success:function(){
+      //put updates for elements here
+    }
+  });
+  return false;
+}
+</script>
